@@ -19,6 +19,7 @@
 package org.apache.cxf.cdi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -40,6 +41,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.bus.extension.ExtensionManagerBus;
+import org.apache.cxf.cdi.extension.JAXRSServerFactoryCustomizationExtension;
 import org.apache.cxf.feature.Feature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.utils.ResourceUtils;
@@ -91,11 +93,13 @@ public class JAXRSCdiResourceExtension implements Extension {
             if (instance.getSingletons().isEmpty() && instance.getClasses().isEmpty()) {
                 final JAXRSServerFactoryBean factory = createFactoryInstance(instance,
                     loadServices(beanManager), loadProviders(beanManager), loadFeatures(beanManager));
+                customize(beanManager, factory);
                 factory.init();   
             } else {
                 // If there is an application with any singletons or classes defined, we will
                 // create a server factory bean with only application singletons and classes.
                 final JAXRSServerFactoryBean factory = createFactoryInstance(instance);
+                customize(beanManager, factory);
                 factory.init();  
             }
         }
@@ -129,7 +133,7 @@ public class JAXRSCdiResourceExtension implements Extension {
         instance.setProviders(providers);
         instance.setProviders(loadExternalProviders());
         instance.setFeatures(features);
-        instance.setBus(bus);                  
+        instance.setBus(bus);
         
         return instance; 
     }
@@ -204,7 +208,7 @@ public class JAXRSCdiResourceExtension implements Extension {
                     bean.getBeanClass(), 
                     beanManager.createCreationalContext(bean) 
                 )
-            );    
+            );
         }
         
         return services;
@@ -229,5 +233,25 @@ public class JAXRSCdiResourceExtension implements Extension {
         }
         
         return services;
+    }
+    
+    /**
+     * Look and apply the available JAXRSServerFactoryBean extensions to customize its
+     * creation (f.e. add features, providers, assign transport, ...)
+     * @param beanManager bean manager
+     * @param bean JAX-RS server factory bean about to be created
+     */
+    private void customize(final BeanManager beanManager, final JAXRSServerFactoryBean bean) {
+        final Collection<Bean<?>> extensionBeans = beanManager.getBeans(JAXRSServerFactoryCustomizationExtension.class);
+        
+        for (final Bean<?> extensionBean: extensionBeans) {
+            final JAXRSServerFactoryCustomizationExtension extension =
+                (JAXRSServerFactoryCustomizationExtension)beanManager.getReference(
+                    extensionBean, 
+                    extensionBean.getBeanClass(), 
+                    beanManager.createCreationalContext(extensionBean) 
+                );
+            extension.customize(bean);
+        }
     }
 }
