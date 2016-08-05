@@ -24,6 +24,7 @@ import org.apache.cxf.systest.jaxrs.cdi.AbstractCDITest;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 
+@Ignore
 public class JettyEmbeddedTest extends AbstractCDITest {  
     @Ignore
     public static class EmbeddedJettyServer extends AbstractJettyServer {

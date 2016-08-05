@@ -20,6 +20,7 @@ package org.apache.cxf.systest.jaxrs;
 
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -31,6 +32,7 @@ import org.apache.cxf.jaxrs.validation.JAXRSBeanValidationFeature;
 import org.apache.cxf.jaxrs.validation.ValidationExceptionMapper;
 import org.apache.cxf.systest.jaxrs.cdi.BookStore;
 
+@ApplicationScoped
 @ApplicationPath("/custom")
 public class BookStoreCustomApplication extends Application {
     @Inject private BookStore bookStore;

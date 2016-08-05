@@ -18,11 +18,13 @@
  */
 package org.apache.cxf.systest.jaxrs;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("/api")
+@ApplicationScoped
 public class BookStoreApplication extends Application {
     @Produces public String version() {
         return "1.0";

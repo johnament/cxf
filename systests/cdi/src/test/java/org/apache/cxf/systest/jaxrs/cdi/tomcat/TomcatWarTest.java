@@ -20,12 +20,10 @@
 package org.apache.cxf.systest.jaxrs.cdi.tomcat;
 
 import org.apache.cxf.jaxrs.model.AbstractResourceInfo;
-import org.apache.cxf.systest.jaxrs.cdi.AbstractCDITest;
+import org.apache.cxf.systest.jaxrs.cdi.StandardBookStoreDeployment;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
-public class TomcatWarTest extends AbstractCDITest {  
-    @Ignore
+public class TomcatWarTest extends StandardBookStoreDeployment {
     public static class EmbeddedTomcatServer extends AbstractTomcatServer {
         public static final int PORT = allocatePortAsInt(EmbeddedTomcatServer.class);
 
@@ -38,9 +36,9 @@ public class TomcatWarTest extends AbstractCDITest {
     public static void startServers() throws Exception {
         AbstractResourceInfo.clearAllMaps();
         assertTrue("server did not launch correctly", launchServer(EmbeddedTomcatServer.class, true));
-        createStaticBus();
+//        createStaticBus();
     }
-    
+
     @Override
     protected int getPort() {
         return EmbeddedTomcatServer.PORT;

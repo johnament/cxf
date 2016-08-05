@@ -91,9 +91,11 @@ public abstract class AbstractCDITest extends AbstractBusClientServerTestBase {
     
     protected WebClient createWebClient(final String url, final String mediaType) {
         final List< ? > providers = Arrays.asList(new JacksonJsonProvider());
-        
+
+        String baseAddress = "http://localhost:" + getPort() + url;
+        System.out.println("Base address: " + baseAddress);
         final WebClient wc = WebClient
-            .create("http://localhost:" + getPort() + url, providers)
+            .create(baseAddress, providers)
             .accept(mediaType);
         
         WebClient.getConfig(wc).getHttpConduit().getClient().setReceiveTimeout(10000000L);

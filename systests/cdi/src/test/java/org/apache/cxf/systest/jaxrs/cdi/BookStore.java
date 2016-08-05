@@ -20,6 +20,7 @@ package org.apache.cxf.systest.jaxrs.cdi;
 
 import java.util.Collection;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -38,6 +39,7 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.cxf.systest.jaxrs.BookStoreService;
 
 @Path("/bookstore/")
+@RequestScoped
 public class BookStore {
     @Inject private BookStoreService service;
     @Inject private String version;

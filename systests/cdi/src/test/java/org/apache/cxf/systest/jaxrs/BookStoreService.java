@@ -22,11 +22,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import org.apache.cxf.systest.jaxrs.cdi.Book;
 
 @Named
+@ApplicationScoped
 public class BookStoreService {
     private Map< String, Book > books = new HashMap< String, Book >();
 
